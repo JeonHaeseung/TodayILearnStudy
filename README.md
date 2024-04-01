@@ -1,2 +1,2 @@
-# SpringBootTILStudy
-Springboot 관련 내용의 Today I Learn 스터디입니다.
+# TodayILearnStudy
+Today I Learn 스터디를 정리해 놓은 레포지토리입니다.
