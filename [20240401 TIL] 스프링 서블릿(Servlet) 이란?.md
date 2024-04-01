@@ -9,6 +9,9 @@ Spring Boot로 코드를 짜다가 어느 날 든 생각. 도대체 `HttpServlet
 
 ![DispatcherServlet](https://github.com/JeonHaeseung/SpringBootTILStudy/assets/89632139/ed1ff7f8-4a4a-481f-9ac3-e7fdfeb59ade)
 
+Spring MVC에서 프론트 컨트롤러는 다음과 같은 방식으로 작동한다. Spring MVC에서 서버 사이드 랜더링까지 하는 상황이라고 했을 때, `controller`로(`@Controller` 어노테이션이 붙은 클래스) 사용자의 request를 보내고, 그에 대한 데이터를 `model`로 받은 다음, `view` 템플렛(여기서는 `.jsp`)을 찾아서 `model` 데이터를 전달하고, 그 결과로 파싱된 데이터를 받아서 최종적으로 response하는 게 프론트 컨트롤러의 역할이었던 것이다. 
+![ServletEngine](https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/3ab8f973-e9bb-417b-907c-126d575cb101)
+
 그렇다면 나는 `DispatcherServlet`를 만든 적이 없는데, 어떻게 프론트 컨트롤러가 만들어진 것일까?
 이는 스프링 내부에 미리 구현되어 있기 때문이다. 아래 코드는 애플리케이션이 시작되는 순간 호출되는 코드이다. `onStartup` 함수는 애플리케이션이 시작되면 호출되는데,
 1) `AnnotationConfigWebApplicationContext`에 애플리케이션의 설정을 세팅해주고,
@@ -35,10 +38,17 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 }
 ```
 
+그럼 `DispatcherServlet` 말고 그냥 서블릿은 무엇일까? `@Controller` 어노테이션이 붙은 클래스는 아직 서블릿이 아니고, 그냥 단순한 Bean이다. 서블릿은 HTTP 요청과 응답을 전송하는 데 사용되는 것으로, 웹 서비스의 한 단계 아래 계층이라고 보면 된다. Spring을 사용할 때 서블릿 작업은 Spring에 의해 수행되며, `DispatcherServlet` 요청을 올바른 Bean으로 전달한다. 표준 스펙에서는 다음과 같이 소개하고 있다.
+> A servlet is a Java™ technology-based Web component, managed by a container, that generates dynamic content. Like other Java technology-based components, servlets are platform-independent Java classes that are compiled to platform-neutral byte code that can be loaded dynamically into and run by a Java technology-enabled Web server. Containers, sometimes called servlet engines, are Web server extensions that provide servlet functionality. Servlets interact with Web clients via a request/response paradigm implemented by the servlet container.
+> 서블릿은 컨테이너에 의해 관리되는 Java™ 기술 기반의 웹 컴포넌트로, 동적 콘텐츠를 생성합니다. 다른 Java 기술 기반의 컴포넌트와 마찬가지로, 서블릿은 플랫폼에 독립적인 Java 클래스로 컴파일되어 플랫폼 중립적인 바이트 코드로 변환됩니다. 이는 Java 기술을 지원하는 웹 서버에 동적으로 로드되어 실행될 수 있습니다. 컨테이너는 때때로 서블릿 엔진이라고도 불리며, 서블릿 기능을 제공하는 웹 서버 확장 기능입니다. 서블릿은 서블릿 컨테이너에 의해 구현된 요청/응답 패러다임을 통해 웹 클라이언트와 상호 작용합니다.
+
 ## 레퍼런스
 ---
 - [docs.spring.io의 mvc-servlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html)
 - [geeksforgeeks의 what-is-dispatcher-servlet-in-spring](https://www.geeksforgeeks.org/what-is-dispatcher-servlet-in-spring/)
+- [stackoverflow의 when-to-use-servlet-or-controller](https://stackoverflow.com/questions/16439249/when-to-use-servlet-or-controller)
+- [stackoverflow의 difference-between-servlet-and-web-service](https://stackoverflow.com/questions/5930795/difference-between-servlet-and-web-service)
+- [Java Servlet Specification](https://javaee.github.io/servlet-spec/DOWNLOADS.html)
 
 ## QnA
 ---
