@@ -37,8 +37,8 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
 ## 레퍼런스
 ---
-[docs.spring.io의 mvc-servlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html)
-[geeksforgeeks의 what-is-dispatcher-servlet-in-spring](https://www.geeksforgeeks.org/what-is-dispatcher-servlet-in-spring/)
+- [docs.spring.io의 mvc-servlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html)
+- [geeksforgeeks의 what-is-dispatcher-servlet-in-spring](https://www.geeksforgeeks.org/what-is-dispatcher-servlet-in-spring/)
 
 ## QnA
 ---
