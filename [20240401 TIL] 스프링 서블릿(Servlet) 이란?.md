@@ -40,7 +40,16 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
 그럼 `DispatcherServlet` 말고 그냥 서블릿은 무엇일까? `@Controller` 어노테이션이 붙은 클래스는 아직 서블릿이 아니고, 그냥 단순한 Bean이다. 서블릿은 HTTP 요청과 응답을 전송하는 데 사용되는 것으로, 웹 서비스의 한 단계 아래 계층이라고 보면 된다. Spring을 사용할 때 서블릿 작업은 Spring에 의해 수행되며, `DispatcherServlet` 요청을 올바른 Bean으로 전달한다. 표준 스펙에서는 다음과 같이 소개하고 있다.
 > A servlet is a Java™ technology-based Web component, managed by a container, that generates dynamic content. Like other Java technology-based components, servlets are platform-independent Java classes that are compiled to platform-neutral byte code that can be loaded dynamically into and run by a Java technology-enabled Web server. Containers, sometimes called servlet engines, are Web server extensions that provide servlet functionality. Servlets interact with Web clients via a request/response paradigm implemented by the servlet container.
-> 서블릿은 컨테이너에 의해 관리되는 Java™ 기술 기반의 웹 컴포넌트로, 동적 콘텐츠를 생성합니다. 다른 Java 기술 기반의 컴포넌트와 마찬가지로, 서블릿은 플랫폼에 독립적인 Java 클래스로 컴파일되어 플랫폼 중립적인 바이트 코드로 변환됩니다. 이는 Java 기술을 지원하는 웹 서버에 동적으로 로드되어 실행될 수 있습니다. 컨테이너는 때때로 서블릿 엔진이라고도 불리며, 서블릿 기능을 제공하는 웹 서버 확장 기능입니다. 서블릿은 서블릿 컨테이너에 의해 구현된 요청/응답 패러다임을 통해 웹 클라이언트와 상호 작용합니다.
+
+> 서블릿은 컨테이너에 의해 관리되는 Java™ 기술 기반의 웹 컴포넌트로, 동적 콘텐츠를 생성합니다. 다른 Java 기술 기반의 컴포넌트와 마찬가지로, 서블릿은 플랫폼에 독립적인 Java 클래스로 컴파일되어 플랫폼 중립적인 바이트 코드로 변환됩니다. 이는 Java 기술을 지원하는 웹 서버에 동적으로 로드되어 실행될 수 있습니다. **컨테이너는 때때로 서블릿 엔진이라고도 불리며,** 서블릿 기능을 제공하는 웹 서버 확장 기능입니다. 서블릿은 서블릿 컨테이너에 의해 구현된 요청/응답 패러다임을 통해 웹 클라이언트와 상호 작용합니다.
+
+그러니까 위에서 보았던 서블릿 엔진에 서블릿 컨테이너였다. 서블릿에 대해서 좀 더 자세히 알기 위해서 일반적인 이벤트에 대한 Step-by-step 설명을 보자.
+
+1. 클라이언트(예: 웹 브라우저)가 웹 서버에 액세스하고 HTTP 요청을 보낸다.
+2. 요청은 웹 서버에 의해 수신되고 서블릿 컨테이너에 전달된다. 서블릿 컨테이너는 호스트 웹 서버와 동일한 프로세스에서 실행될 수도 있고, 동일한 호스트의 다른 프로세스에서 실행될 수도 있으며, 요청을 처리하는 웹 서버와 다른 호스트에서 실행될 수도 있다.
+4. 서블릿 컨테이너는 서블릿의 구성에 기반하여 어떤 서블릿을 호출할지 결정하고, 요청과 응답을 나타내는 객체를 사용하여 해당 서블릿을 호출한다.
+5. 서블릿은 요청 객체(request object)를 사용하여 원격 사용자가 누구인지, 이 요청의 일부로 HTTP POST 매개변수가 전송되었는지 등의 관련 데이터를 확인한다. 서블릿은 프로그래밍된 논리를 수행하고, 클라이언트에게 다시 전송할 데이터를 생성한다. 이 데이터를 응답 객체(response object)를 통해 클라이언트에게 전송한다.
+6. 서블릿이 요청을 처리하는 것을 마치면, 서블릿 컨테이너는 응답이 적절하게 플러시(flush)되도록 보장하고, 제어를 호스트 웹 서버에 반환한다.
 
 ## 레퍼런스
 ---
