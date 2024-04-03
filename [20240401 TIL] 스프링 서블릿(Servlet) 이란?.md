@@ -51,6 +51,21 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 5. 서블릿은 요청 객체(request object)를 사용하여 원격 사용자가 누구인지, 이 요청의 일부로 HTTP POST 매개변수가 전송되었는지 등의 관련 데이터를 확인한다. 서블릿은 프로그래밍된 논리를 수행하고, 클라이언트에게 다시 전송할 데이터를 생성한다. 이 데이터를 응답 객체(response object)를 통해 클라이언트에게 전송한다.
 6. 서블릿이 요청을 처리하는 것을 마치면, 서블릿 컨테이너는 응답이 적절하게 플러시(flush)되도록 보장하고, 제어를 호스트 웹 서버에 반환한다.
 
+## QnA
+---
+이렇게 스터디를 준비해서 발표했는데, 이런 질문을 받았다.
+> Step-by-step의 4번을 보면 일반적으로 API를 통해서 controller를 호출하는 과정과 비슷해 보이는데, 그럼 우리가 개발한 controller가 하나하나 서블릿이라고 하는 건가요?
+
+이 질문을 듣고 뭐라고 답하기가 굉장히 애매해서, 아직 서블릿이 뭔지 모른다는 생각이 들었다. 그래서 추가적으로 검색해보다가 아래 이미지를 찾았다.
+![image](https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/2f8bcabf-fd61-4267-8f34-26001ac9ab19)
+그러니까 서블릿이라는 것은 `DispatcherServlet`에 가기도 전에, `doGet(), doPost(), doPut(), doDelete()`와 같은 메소드들을 먼저 거치게 하는 과정이다. geeksforgeeks에서는 서블릿이 `HttpServletRequest를` 처리하는 과정을 다음과 같이 설명하고 있다.
+1. `HttpServletRequest` 인터페이스는 ServletRequest 인터페이스를 확장하여 서블릿에 대한 Http 관련 요청 정보를 제공한다.
+2. 서블릿 컨테이너는 `HttpServletRequest` 객체를 생성하고 이를 서블릿의 서비스 메소드(`doPost(),` `doGet()` 등)에 인수로 전달한다.
+3. 이 객체는 매개변수 이름과 값, 속성, 입력 스트림과 같은 데이터를 제공한다.
+4. 예를 들어 `doPost()`를 하기 위해서 `getParameter()` 및 `getParameterValues()`를 사용하여 양식 필드의 값을 읽을 수 있는데, 이 메소드는 지정된 이름으로 지정된 요청의 필드/매개변수 값을 문자열로 반환한다.
+
+그러니까 예전에 JSP를 통해서 개발할 때는 `doPost(),` `doGet()` 등의 함수를 써야했는데, 이제는 그게 개발자가 직접 다룰 필요가 없도록 백본으로만 남겨두고, 그 위에서 SpringBoot가 돌아가는 형식이다. `@Controller`, `@RequestMapping`과 같은 Spring MVC의 주요 어노테이션들은 내부적으로 서블릿을 사용하는 것이었다. 일종의 내부 API 또는 요청의 전처리를 담당하는 느낌으로 이해하면 될 것 같다. 그래서 Spring Security에서 `@Controller`까지 도달하기 전에도 `HttpServletRequest`를 사용해 보안 관련 로직을 처리할 수 있는 것이다!
+
 ## 레퍼런스
 ---
 - [docs.spring.io의 mvc-servlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html)
@@ -58,7 +73,5 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 - [stackoverflow의 when-to-use-servlet-or-controller](https://stackoverflow.com/questions/16439249/when-to-use-servlet-or-controller)
 - [stackoverflow의 difference-between-servlet-and-web-service](https://stackoverflow.com/questions/5930795/difference-between-servlet-and-web-service)
 - [Java Servlet Specification](https://javaee.github.io/servlet-spec/DOWNLOADS.html)
-
-## QnA
----
-(스터디 이후에 추가 예정)
+- [LinkedIn의 What is Web Context and Request Lifecycle in a Spring Web Application](https://www.linkedin.com/pulse/what-web-context-request-lifecycle-spring-application-ali-pty1f/)
+- [geeksforgeeks의 servlet-form-data](https://www.geeksforgeeks.org/servlet-form-data/)
