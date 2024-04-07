@@ -77,11 +77,16 @@ private final MemberRepository memberRepository;
 
 ## QnA
 ---
+이렇게 스터디를 준비해갔는데, `@RequiredArgsConstructor` 어노테이션 관련해서 질문이 들어왔다. 예를 들어서 우리가 사용하고 싶은 repository가 있을 때, 이를 필드로 명시해주고 `final`만 붙이면 사용 가능해지는데, 그 이유가 `@RequiredArgsConstructor` 어노테이션이 해당 repository의 구현체를 찾아서 DI 시켜주는 거라면 해당 구현체는 어떻게 만들어지고 어떻게 찾는 것인가?라는 질문이었다. 아마 Spring에서 bean이 생성되고 해당 bean을 찾아서 DI를 시키는 게 어떻게 이루어지는 지를 질문하신 것 같았다.
 
+스프링은 클래스 위에 `@Configuration` 어노테이션을 사용해서 JavaConfig에게 bean definition이 이루어지는 source라는 것을 명시할 수 있다. 이 클래스 안에 method-level annotation인 `@Bean`을 붙인 메소드를 만들면 `JavaConfig`에 의해서 해당 메소드가 실행되고, return 값을 bean으로 등록해서 BeanFactory에 넣어진다.
+
+근데 이렇게 명시적으로 bean으로 만들어주지 않아도 어떤 클래스들은 자동으로 bean이 되는데, `@Controller`, `@Service`, `@Repository` 등 내부에 `@Component`를 가지고 있는 어노테이션을 사용하면 자동으로 컴포넌트 스캔(Component Scan)의 대상이 되어서 빈으로 등록된다. 따라서  `@RequiredArgsConstructor`만 사용해도 빈을 사용할 수 있는 것이다.
 
 ## 레퍼런스
 ---
 - [LinkedIn의 autowired-annotation](https://www.linkedin.com/pulse/autowired-annotation-spring-william-haywood/)
 - [baeldung의 spring-autowire](https://www.baeldung.com/spring-autowire)
 - [medium의 a-deep-dive-into-autowired-annotation](https://medium.com/@AlexanderObregon/a-deep-dive-into-autowired-annotation-in-the-spring-framework-2defc273ba59)
-
+- [docs.spring의 creating-bean-definitions](https://docs.spring.io/spring-javaconfig/docs/1.0.0.m3/reference/html/creating-bean-definitions.html)
+- [medium의 componentscan-in-spring-boot](https://saranganjana.medium.com/componentscan-in-spring-boot-ec828569df26)
