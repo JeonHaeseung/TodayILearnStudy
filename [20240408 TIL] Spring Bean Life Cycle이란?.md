@@ -1,9 +1,9 @@
 ## TIL - Spring Bean Life Cycle에 대해서
 ---
 Spring에서 빈이 만들어지고, DI로 사용된다는 것은 알고 있었다. 그런데 전체적으로 Spring Bean Life Cycle에 대해서는 잘 모르는 것 같아서 이번에 새롭게 정리해보려고 한다. 간단하게 정리하자면, bean은 다음과 같은 라이프 사이클을 거친다.
-![image](https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/f5da182c-442c-4c5d-a1e3-585f3a63c69b)
+![spring bean life cycle](https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/f5da182c-442c-4c5d-a1e3-585f3a63c69b)
 `스프링 컨테이너 시작 -> 스프링 빈 초기화 -> 의존관계 주입(DI) -> init() -> 유틸리티 -> destory() -> 스프링 종료`라는 라이프 사이클을 거치는데, 더 디테일한 전체 flow는 다음과 같다.
-![image](https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/fbecfc42-2b76-40a9-bea8-70591c8f91c4)
+<img src="https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/fbecfc42-2b76-40a9-bea8-70591c8f91c4" width="100%">
 1. 패키지 스캐닝이 있는 어노테이션(`@Bean`, `@Controller`, `@RestController`, `@Service`, `@Repository`, `@Component`)이나 XML 등으로 Bean Definition이 선언된다.
 2. `BeanDefinitionReader`가 이 구성을 읽고 `BeanDefinition` 객체를 생성한다.
 3. `BeanFactory`가 bean의 생성자를 호출해서 `FactoryBean` 객체를 생성한다.
