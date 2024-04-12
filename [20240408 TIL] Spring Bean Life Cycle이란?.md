@@ -74,7 +74,9 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
 ## QnA
 ---
-(스터디 이후 채워질 예정)
+스터디가 끝나고, 놀랍게도 아무도 질문을 주지 않았다.
+
+너무 어려워서 질문을 할 수 없었다고 한다. 깊은 슬픔...조금 더 잘 이해해서 쉽게 설명할 수 있도록 노력해야겠다.
 
 ## 레퍼런스
 ---
