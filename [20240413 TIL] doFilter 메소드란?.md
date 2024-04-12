@@ -1,4 +1,4 @@
-## TIL - Spring Bean Life Cycle에 대해서
+## TIL - doFilter 메소드에 대해서
 ---
 개발하면서 매우 궁금했던 게 바로 `chain.doFilter(request, response);` 메소드였다. `JwtAuthorizationFilter`에 존재하는 이 `doFilter`는 도대체 무엇을 하는 얘일까? [내 첫 번째 TIL](https://github.com/JeonHaeseung/TodayILearnStudy/blob/main/%5B20240401%20TIL%5D%20%EC%8A%A4%ED%94%84%EB%A7%81%20%EC%84%9C%EB%B8%94%EB%A6%BF(Servlet)%20%EC%9D%B4%EB%9E%80%3F.md)에서 공부했던 게 바로 `doFilter` 안의 인자로 들어가는 `HttpServletRequest request`와 `HttpServletResponse response`였는데, 얘들은 일종의 요청과 응답을 나타내는 객체라는 것을 알게되었다. 그러나 이제 궁금한 점은 그렇다면 요청과 응답을 동시에 가지고 있는 `doFilter` 메소드는 무엇을 하는 것 인지였다.
 
