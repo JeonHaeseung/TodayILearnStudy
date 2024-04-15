@@ -75,16 +75,60 @@ oracle에 따르면, 필터는 리소스(서블릿 또는 정적 콘텐츠)에 �
 
 ## QnA
 ---
-(스터디 이후 채워질 예정)
+이렇게 스터디를 진행했는데 다음과 같은 질문을 받았다.
+> 그럼 filter가 SecurityFilterChain에 addFilter 메소드로 등록된다는 건 알겠는데, SecurityFilterChain는 어떻게 스프링에 등록되나요? 자동으로 실행 가능하게 등록되는 건가요?
+
+이 부분은 나도 잘 모르겠어서 추가로 찾아봐야겠다는 생각이 들었다. 우선 `SecurityFilterChain`의 위에 `@Bean`이 있으므로 실행 가능하게 만들어지는 이유는 명확하다. 여기서 이게 중요한 것은 어떻게 이게 가장 먼저 돌아가는지를 스프링이 아는지이다.
+찾아보니, 스프링 시큐리티는 서비스 설정(Configuration)에 라서 filter를 순서대로 실행할 수 있다고 한다. 서블릿 필터를 사용할 때는 당연히 web.xml에 해당 필터들을 선언해야 한다(그렇지 않으면 서블릿 컨테이너에 의해서 무시된다). web.xml에 선언된 `DelegatingFilterProxy`이 바로 web.xml과 애플리케이션 컨텍스트 사이의 연결을 제공하는 역할을 한다.
+```xml
+<filter> 
+<filter-name> myFilter </filter-name> 
+<filter-class> org.springframework.web.filter.DelegatingFilterProxy </filter-class> 
+</filter>
+
+<filter-mapping> 
+<filter-name> myFilter </filter-name> 
+<url-pattern> /* </url-pattern> 
+</filter-mapping>
+```
+
+`DelegatingFilterProxy`가 하는 일은 Spring 애플리케이션 컨텍스트에서 가져온 빈(`springSecurityFilterChain`)을 통해 필터의 메서드를 위임하는 것이다. Spring Security의 웹 인프라는 `FilterChainProxy`의 인스턴스로 위임함으로써 사용되어야 한다. 물론 필요한 각 Spring Security 필터 빈을 애플리케이션 컨텍스트 파일에 선언하고, 각 필터에 대한 해당 DelegatingFilterProxy 항목을 모두 web.xml에 추가해줄 수 있겠지만, 이는 너무 번거롭다. 이때 `FilterChainProxy`를 사용하면 web.xml에 단일 항목만 추가해도 웹 보안 빈을 관리하기 위해 완전히 애플리케이션 컨텍스트 파일을 처리할 수 있다. 이는 앞서 언급한 예제와 마찬가지로 DelegatingFilterProxy를 사용하여 연결되지만, filter-name이 빈 이름 "filterChainProxy"로 설정된다. 그런 다음 아래와 같이 필터 체인은 동일한 빈 이름으로 애플리케이션 컨텍스트에 선언된다:
+```xml
+<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+<constructor-arg>
+	<list>
+	<sec:filter-chain pattern="/restful/**" filters="
+		securityContextPersistenceFilterWithASCFalse,
+		basicAuthenticationFilter,
+		exceptionTranslationFilter,
+		filterSecurityInterceptor" />
+	<sec:filter-chain pattern="/**" filters="
+		securityContextPersistenceFilterWithASCTrue,
+		formLoginFilter,
+		exceptionTranslationFilter,
+		filterSecurityInterceptor" />
+	</list>
+</constructor-arg>
+</bean>
+```
+그림으로 표현하자면 아래와 같이 적용된다:
+<img src=https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/4137f38c-4815-400b-b5c9-d422c5d6afb9 width="100%">
+
 
 ## 레퍼런스
 ---
+### Filter
 - [oracle의 Filter](https://docs.oracle.com/javaee%2F6%2Fapi%2F%2F/javax/servlet/Filter.html)
 - [stackoverflow의 what-is-chain-dofilter-doing-in-filter-dofilter-method](https://stackoverflow.com/questions/2057607/what-is-chain-dofilter-doing-in-filter-dofilter-method)
 - [geeksforgeeks의 java-servlet-filter-with-example](https://www.geeksforgeeks.org/java-servlet-filter-with-example/)
 - [docs.spring의 spring-security architecture](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
 - [linkedin의 filters-interceptors-spring-boot](https://www.linkedin.com/pulse/demystifying-filters-interceptors-spring-boot-ali-as-ad--0mdlf)
 - [tistory의 스프링 필터의 동작과정](https://emgc.tistory.com/125)
+### HttpServletResponse 및 에러 핸들
 - [oracle의 HttpServletResponse](https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletResponse.html)
 - [docs.spring의 DefaultErrorAttributes](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/web/servlet/error/DefaultErrorAttributes.html)
-- [[docs.spring의 HandlerExceptionResolver](https://docs.spring.io/spring-framework/docs/6.1.5/javadoc-api/org/springframework/web/servlet/HandlerExceptionResolver.html)
+- [docs.spring의 HandlerExceptionResolver](https://docs.spring.io/spring-framework/docs/6.1.5/javadoc-api/org/springframework/web/servlet/HandlerExceptionResolver.html)
+### SecurityFilterChain
+- [github.io의 spring-filter-chain](https://thecodinglog.github.io/spring/2020/04/28/spring-filter-chain.html)
+- [docs.spring의 security-filter-chain](https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/security-filter-chain.html)
+- [baeldung의 spring-delegating-filter-proxy](https://www.baeldung.com/spring-delegating-filter-proxy)
