@@ -111,6 +111,14 @@ oracle에 따르면, 필터는 리소스(서블릿 또는 정적 콘텐츠)에 �
 </constructor-arg>
 </bean>
 ```
+정리하자면 다음과 같다.
+1. web.xml에 선언된 DelegatingFilterProxy은 서블릿 컨테이너의 라이프사이클(web.xml)과 애플리케이션 컨텍스트 사이의 연결을 제공한다. 즉, ApplicationContext에서 Filter의 Bean을 찾아서 호출할 수 있다.
+2. FilterChainProxy는 SecurityFilterChain을 통해 많은 필터 인스턴스 목록에 위임을 허용하는 특별한 필터이다. FilterChainProxy는 Bean이므로 일반적으로 DelegatingFilterProxy에 래핑 가능하다.
+3. SecurityFilterChain은 순서대로 필터를 호출한다. 호출된 필터는 이렇게 작동된다.
+   a. request를 검토한다.
+   b. 선택적으로 request 객체(`HttpServletRequest request`) 또는 response 객체(`HttpServletResponse response`)를 사용자 정의 구현으로 래핑하여 입력/출력에서 contents 또는 header를 필터링한다.
+   c. FilterChain 개체(`chain.doFilter()`)를 사용하여 체인의 다음 엔터티를 호출하거나, 또는 request 처리를 차단하기 위해 request/response 쌍을 필터 체인의 다음 엔터티로 전달하지 않는다.
+   d. 하나의 필터가 끝나면 필터 체인에서 다음 엔터티를 호출한 후 응답에 헤더를 직접 설정한다.
 그림으로 표현하자면 아래와 같이 적용된다:
 <img src=https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/4137f38c-4815-400b-b5c9-d422c5d6afb9 width="100%">
 
@@ -132,3 +140,4 @@ oracle에 따르면, 필터는 리소스(서블릿 또는 정적 콘텐츠)에 �
 - [github.io의 spring-filter-chain](https://thecodinglog.github.io/spring/2020/04/28/spring-filter-chain.html)
 - [docs.spring의 security-filter-chain](https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/security-filter-chain.html)
 - [baeldung의 spring-delegating-filter-proxy](https://www.baeldung.com/spring-delegating-filter-proxy)
+- [velog의 Spring-Security](https://velog.io/@sodliersung/Spring-Security)
