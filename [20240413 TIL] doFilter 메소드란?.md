@@ -1,6 +1,6 @@
 ## TIL - doFilter 메소드에 대해서
 ---
-개발하면서 매우 궁금했던 게 바로 `chain.doFilter(request, response);` 메소드였다. `JwtAuthorizationFilter`에 존재하는 이 `doFilter`는 도대체 무엇을 하는 얘일까? [내 첫 번째 TIL](https://github.com/JeonHaeseung/TodayILearnStudy/blob/main/%5B20240401%20TIL%5D%20%EC%8A%A4%ED%94%84%EB%A7%81%20%EC%84%9C%EB%B8%94%EB%A6%BF(Servlet)%20%EC%9D%B4%EB%9E%80%3F.md)에서 공부했던 게 바로 `doFilter` 안의 인자로 들어가는 `HttpServletRequest request`와 `HttpServletResponse response`였는데, 얘들은 일종의 요청과 응답을 나타내는 객체라는 것을 알게되었다. 그러나 이제 궁금한 점은 그렇다면 요청과 응답을 동시에 가지고 있는 `doFilter` 메소드는 무엇을 하는 것 인지였다.
+개발하면서 매우 궁금했던 게 바로 `chain.doFilter(request, response);` 메소드였다. `JwtAuthorizationFilter`에 존재하는 이 `doFilter`는 도대체 무엇을 하는 애일까? [내 첫 번째 TIL](https://github.com/JeonHaeseung/TodayILearnStudy/blob/main/%5B20240401%20TIL%5D%20%EC%8A%A4%ED%94%84%EB%A7%81%20%EC%84%9C%EB%B8%94%EB%A6%BF(Servlet)%20%EC%9D%B4%EB%9E%80%3F.md)에서 공부했던 게 바로 `doFilter` 안의 인자로 들어가는 `HttpServletRequest request`와 `HttpServletResponse response`였는데, 얘들은 일종의 요청과 응답을 나타내는 객체라는 것을 알게되었다. 그러나 이제 궁금한 점은 그렇다면 요청과 응답을 동시에 가지고 있는 `doFilter` 메소드는 무엇을 하는 것 인지였다.
 
 oracle에 따르면, 필터는 리소스(서블릿 또는 정적 콘텐츠)에 대한 요청이나 리소스의 응답, 또는 둘 다에 대해 필터링 작업을 수행하는 객체라고 한다. 여기서 약간의 힌트를 얻을 수 있다. 우리는 JWT 토큰을 request에 대해서만 검증하면 되긴 하지만, 일반적으로 필터의 일종인 `JwtAuthorizationFilter`은 리소스의 요청/응답 모두에 필터링을 할 수 있는 객체인 것이다. 조금 더 구체적인 메소드의 동작 방식은 다음과 같다:
 1. request를 검토한다.
@@ -112,13 +112,13 @@ oracle에 따르면, 필터는 리소스(서블릿 또는 정적 콘텐츠)에 �
 </bean>
 ```
 정리하자면 다음과 같다.
-1. web.xml에 선언된 DelegatingFilterProxy은 서블릿 컨테이너의 라이프사이클(web.xml)과 애플리케이션 컨텍스트 사이의 연결을 제공한다. 즉, ApplicationContext에서 Filter의 Bean을 찾아서 호출할 수 있다.
-2. FilterChainProxy는 SecurityFilterChain을 통해 많은 필터 인스턴스 목록에 위임을 허용하는 특별한 필터이다. FilterChainProxy는 Bean이므로 일반적으로 DelegatingFilterProxy에 래핑 가능하다.
-3. SecurityFilterChain은 순서대로 필터를 호출한다. 호출된 필터는 이렇게 작동된다.
-   a. request를 검토한다.
-   b. 선택적으로 request 객체(`HttpServletRequest request`) 또는 response 객체(`HttpServletResponse response`)를 사용자 정의 구현으로 래핑하여 입력/출력에서 contents 또는 header를 필터링한다.
-   c. FilterChain 개체(`chain.doFilter()`)를 사용하여 체인의 다음 엔터티를 호출하거나, 또는 request 처리를 차단하기 위해 request/response 쌍을 필터 체인의 다음 엔터티로 전달하지 않는다.
-   d. 하나의 필터가 끝나면 필터 체인에서 다음 엔터티를 호출한 후 응답에 헤더를 직접 설정한다.
+1. web.xml에 선언된 `DelegatingFilterProxy`은 서블릿 컨테이너의 라이프사이클(web.xml)과 애플리케이션 컨텍스트 사이의 연결을 제공한다. 즉, ApplicationContext에서 Filter의 Bean을 찾아서 호출할 수 있다.
+2. `FilterChainProxy`는 SecurityFilterChain을 통해 많은 필터 인스턴스 목록에 위임을 허용하는 특별한 필터이다. FilterChainProxy는 Bean이므로 일반적으로 DelegatingFilterProxy에 래핑 가능하다.
+3. `SecurityFilterChain`은 순서대로 필터를 호출한다. 호출된 필터는 이렇게 작동된다.
+   - request를 검토한다.
+   - 선택적으로 request 객체(`HttpServletRequest request`) 또는 response 객체(`HttpServletResponse response`)를 사용자 정의 구현으로 래핑하여 입력/출력에서 contents 또는 header를 필터링한다.
+   - FilterChain 개체(`chain.doFilter()`)를 사용하여 체인의 다음 엔터티를 호출하거나, 또는 request 처리를 차단하기 위해 request/response 쌍을 필터 체인의 다음 엔터티로 전달하지 않는다.
+   - 하나의 필터가 끝나면 필터 체인에서 다음 엔터티를 호출한 후 응답에 헤더를 직접 설정한다.
 그림으로 표현하자면 아래와 같이 적용된다:
 <img src=https://github.com/JeonHaeseung/TodayILearnStudy/assets/89632139/4137f38c-4815-400b-b5c9-d422c5d6afb9 width="100%">
 
