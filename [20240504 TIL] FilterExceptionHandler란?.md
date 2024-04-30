@@ -97,7 +97,7 @@ com.auth0.jwt.exceptions.TokenExpiredException: The Token has expired on Mon Mar
                 Authentication authentication = new UsernamePasswordAuthenticationToken(authDetails, null, authDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-           }
+            }
             // doFilter 반드시 포함
             chain.doFilter(request, response);
 
