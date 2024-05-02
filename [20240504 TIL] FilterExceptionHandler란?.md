@@ -116,7 +116,19 @@ public class FilterExceptionHandler {
     }
 }
 ```
-### Step 3 - 
+### Step 3 - JSON으로 response에 write
+위에서 본 `response.getWriter()`는 클라이언트에게 텍스트 데이터를 보낼 수 있는 `PrintWriter` 객체를 반환하고, `print()`는 `PrintWriter` 클래스의 메서드로 텍스트를 출력할 수 있게 해준다. 이때 서블릿 컨테이너는 자동으로 객체를 JSON 직렬화해주므로, `JSONObject`를 리턴해도 된다. 나는 `ApiResponse` 클래스 안에 `JSONObject`로 에러 코드 등을 직접 반환하는 `jsonOf` 메소드를 만들어서 사용하였다.
+```java
+    public static JSONObject jsonOf(ErrorCode errorCode) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        jsonObject.put("success", false);
+        jsonObject.put("message", errorCode.getMessage());
+        jsonObject.put("status", errorCode.getHttpStatus().value());
+        jsonObject.put("code", errorCode.getCode());
+        return jsonObject;
+    }
+```
 
 ### 트러블 슈팅
 
