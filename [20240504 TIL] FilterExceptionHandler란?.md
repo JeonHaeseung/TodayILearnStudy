@@ -186,10 +186,6 @@ java.lang.IllegalStateException: getWriter() has already been called for this re
 
 이게 `chain.doFilter(request, response)`를 반드시 try 문에 포함시켜야 하는 또다른 이유인데, 이 메소드 또한 `getWriter()`를 호출하기 때문에 `setResponse()`가 호출하는 `getWriter()`와 이중 커밋이 되어서 에러가 난다. 따라서 다음 필터로 넘어가지 못하게 하기 위해서 + `getWriter()` 호출을 막기 위해서 꼭 이 메소드를 try 문 안에 넣어서 에러가 나면 중단되도록 해야 한다. 쉽게 말하자면, `에러 발생이 가능한 코드~chain.doFilter()가 있는 코드`까지 전부 try 문에 있어야 한다.
 
-## QnA
----
-(스터디 이후 채워질 예정)
-
 ## 레퍼런스
 ---
 - [stackoverflow의 exceptions-thrown-in-filters](https://stackoverflow.com/questions/34595605/how-to-manage-exceptions-thrown-in-filters-in-spring)
