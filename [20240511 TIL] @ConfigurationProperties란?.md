@@ -110,10 +110,6 @@ public static class FeignClientConfig {
 ### 결론
 결론적으로, OAuth 로직을 직접 구현하고자 하다가 Spring Security에 이미 있는 로직으로 전부 변경하는 바람에 위의 코드는 필요가 없어지게 되었다(스프링 시큐리티를 쓰는 게 클라이언트 단의 부담이 훨씬 적었다). 그러나 @Value 대신 @ConfigurationProperties을 쓰는 것은 자료구조적으로 설정 값을 접근할 수 있는 좋은 방법인 것 같다.
 
-## QnA
----
-(스터디 이후 채워질 예정)
-
 ## 레퍼런스
 ---
 - [medium의 why-you-should-stop-using-value-annotations](https://medium.com/@mikael_55667/why-you-should-stop-using-value-annotations-in-spring-and-use-this-instead-2c8a47e5096a)
