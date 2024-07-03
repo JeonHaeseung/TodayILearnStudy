@@ -303,9 +303,3 @@ public class DiscordMessageGenerator {
 실제 디스코드 메세지 관련 코드를 확인하고 싶은 사람들은 아래 링크를 참고하면 된다.
 
 - [Discord Webhook Github Repository](https://github.com/studio-recoding/NESS_BE/tree/main/src/main/java/Ness/Backend/infra/discord)
-
-### QnA
----
-
-### 레퍼런스
----
