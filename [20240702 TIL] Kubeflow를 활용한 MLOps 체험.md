@@ -16,7 +16,7 @@
 - **KNative**는 Istio의 추론 요청을 받아 새로운 revision을 생성하고, 트래픽에 따라서 Pod를 생성하거나 내리는(scale up-down) 역할을 합니다.
 - **KServe**는 AI 모델이 돌아가는 서버 자체를 container로 구성해 관리합니다. KServe는 Tensorflow, Pytorch 등 다양한 프레임워크로 구현된 모델을 모두 관리할 수 있습니다.
 
-```bash
+```
   +----------------------+        +-----------------------+      +--------------------------+
   |Istio Virtual Service |        |Istio Virtual Service  |      | K8S Service              |
   |                      |        |                       |      |                          |
